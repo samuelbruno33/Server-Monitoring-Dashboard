@@ -5,20 +5,30 @@
     <meta http-equiv="refresh" content="30">
     
     <style>
-        body { font-family: sans-serif; padding: 20px; }
-        h1 { color: #333; }
+        body { 
+            font-family: sans-serif; 
+            padding: 20px; 
+        }
+
+        h1 { 
+            color: #333; 
+        }
         
         table { 
             width: 100%; 
             border-collapse: collapse; 
             margin-top: 20px; 
         }
+
         th, td { 
             border: 1px solid #ddd; 
             padding: 10px; 
             text-align: left; 
         }
-        th { background-color: #f2f2f2; }
+
+        th { 
+            background-color: #f2f2f2; 
+        }
         
         .status { 
             padding: 5px 10px; 
@@ -26,11 +36,26 @@
             border-radius: 4px; 
             font-size: 0.9em;
         }
-        .green { background-color: green; }
-        .red { background-color: red; }
-        .gray { background-color: #666; font-size: 0.8em; margin-right: 5px; }
+
+        .green { 
+            background-color: green; 
+        }
+
+        .red { 
+            background-color: red; 
+        }
+
+        .gray { 
+            background-color: #666; 
+            font-size: 0.8em; 
+            margin-right: 5px; 
+        }
         
-        .top-bar { display: flex; justify-content: space-between; align-items: center;}
+        .top-bar { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center;
+        }
     </style>
 </head>
 <body>
@@ -39,10 +64,10 @@
         <h1>Monitor Rete</h1>
         <div>
             {% if user.is_superuser %}
-                <a href="/admin/" style="margin-right: 15px; font-weight: bold;">Accesso ad area admin</a>
+                <a href="/admin/" style="margin-right: 15px; font-weight: bold;">Pannello di controllo</a>
             {% endif %}
             
-            User: <b>{{ user.username }}</b> | <a href="/admin/logout/">Esci</a>
+            User: <b>{{ user.username }}</b> | <a href="/logout/">Esci</a>
         </div>
     </div>
 

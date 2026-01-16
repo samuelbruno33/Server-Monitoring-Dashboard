@@ -1,11 +1,12 @@
 import socket
 import subprocess
 import platform
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from .models import Server
+from django.contrib.auth import logout
 
-# Simple ping function
+# Ping function
 def ping(ip):
     # Windows uses -n, Linux uses -c
     param = '-n' if platform.system().lower() == 'windows' else '-c'
@@ -52,3 +53,7 @@ def dashboard(request):
         })
 
     return render(request, 'dashboard.html', {'servers': data})
+
+def logout_view(request):
+    logout(request)
+    return redirect('/admin/login/')

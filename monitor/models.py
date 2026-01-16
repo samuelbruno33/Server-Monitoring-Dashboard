@@ -2,11 +2,11 @@ from django.db import models
 
 class Server(models.Model):
     # Server identification
-    name = models.CharField(max_length=100, help_text="Name of the server")
-    ip_address = models.GenericIPAddressField(help_text="IP Address")
-    owner = models.CharField(max_length=100, help_text="Owner for this server")
+    name = models.CharField(max_length=100)
+    ip_address = models.GenericIPAddressField()
+    owner = models.CharField(max_length=100)
     
-    ports_to_check = models.CharField(max_length=200, blank=True, null=True, help_text="Ports")
+    ports_to_check = models.CharField(max_length=200, blank=True, null=True)
 
     # Status fields
     is_online = models.BooleanField(default=False)
