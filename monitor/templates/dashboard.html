@@ -101,7 +101,7 @@
                         {% if svc.open %}
                             <span class="status-online">OPEN</span>
                         {% else %}
-                            <span class="status-offline">CLOSED</span>
+                            <span class="status-offline">CLOSED - {{ svc.error }}</span>
                         {% endif %}
                     </li>
                 {% empty %}

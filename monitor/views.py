@@ -1,10 +1,37 @@
 import socket
 import platform
 import subprocess
+import errno
 from django.shortcuts import render, redirect
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
 from .models import Server, Config
+
+ERROR_CODES = {
+    0: "OK",
+
+    # Connection refused
+    111: "Connection refused",      # Linux
+    10061: "Connection refused",    # Windows
+
+    # Timeout
+    110: "Timeout",                 # Linux
+    10060: "Timeout",               # Windows
+
+    # Non-blocking / no immediate response
+    10035: "No response",
+
+    # Host / Network unreachable
+    113: "Host unreachable",
+    101: "Network unreachable",
+
+    # Others
+    10051: "Network is unreachable",     # Windows
+    10053: "Software caused connection abort",  # Windows
+    10054: "Connection reset by peer",   # Windows/Linux
+    10050: "Network down",               # Windows
+}
+
 
 # Ping a host using the system command
 def ping_host(ip):
@@ -26,19 +53,38 @@ def ping_host(ip):
 
 
 # Check the connection on a given port, if returns true then the service is open, otherwise is closed
-def check_service(ip, port):
+""" # Old version
+    def check_service(ip, port):
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    s.settimeout(0.5)
+    s.settimeout(1)
     
     try:
         result = s.connect_ex((ip, int(port))) # TCP connectino
         s.close()
-        if result == 0:
-            return True
+        return result
+    except socket.error:
+        return -1 """
+
+
+def check_service(ip, port):
+    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    s.settimeout(1)
+
+    try:
+        s.connect((ip, int(port)))
+        s.close()
+        return 0 
+    except socket.timeout:
+        return 10060
+    except ConnectionRefusedError:
+        return 10061
+    except OSError as e:
+        err = getattr(e, 'winerror', None) or getattr(e, 'errno', None)
+
+        if err in ERROR_CODES:
+            return err
         else:
-            return False
-    except:
-        return False
+            return 10035
 
 
 def logout_view(request):
@@ -74,11 +120,21 @@ def dashboard(request):
         my_services = s.services.all() # Get services from the db
         
         for service in my_services:
-            is_open = check_service(s.ip_address, service.port)
+            code = check_service(s.ip_address, service.port)
+
+            if code == 0:
+                is_open = True
+            else:
+                is_open = False
+            
+            description = ERROR_CODES.get(code, "Unknown error")
+            error_msg = f"{description} ({code})"
+
             services_data.append({
                 'name': service.name,
                 'port': service.port,
-                'open': is_open
+                'open': is_open,
+                'error': error_msg
             })
             
         # Add to list
