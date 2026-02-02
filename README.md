@@ -27,7 +27,3 @@ To run the project, simply open a terminal in the main folder (where the `manage
 Once the server has been started, the dashboard can be accessed at http://127.0.0.1:8000/, while the administration panel is available at http://127.0.0.1:8000/admin/.
 
 Sample users are already present for testing the application. The administrator account has the username `admin` and password `admin`, while a normal user is also available for viewing the dashboard only, with the username `test_staff` and password `test`.
-
-
-
-Translated with DeepL.com (free version)
